@@ -23,8 +23,19 @@ public class Result {
     @OneToOne
     @JoinColumn(name = "assessment_id")
     private Assessment assessment;
+    
+    @Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
+	private boolean isDeleted;
 
-    @Column(nullable = false)
+    public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+
+	@Column(nullable = false)
     private int score;
 
 	public int getResultId() {

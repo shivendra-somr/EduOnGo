@@ -25,6 +25,17 @@ public class Assessment {
     @OneToOne
     @JoinColumn(name = "course_id")
     private Course course;
+    
+    @Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
+	private boolean isDeleted;
+
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
 
 	public int getAssessmentId() {
 		return assessmentId;

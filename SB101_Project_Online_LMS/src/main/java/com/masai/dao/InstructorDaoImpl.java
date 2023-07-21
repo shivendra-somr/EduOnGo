@@ -20,10 +20,8 @@ import jakarta.persistence.Query;
 public class InstructorDaoImpl implements InstructorDao {
 
 	public void registerInstructor(Instructor instructor) throws SomethingWentWrongException {
-		EntityManager em = null;
 
-		try {
-			em = EMUtils.getEntityManager();
+		try (EntityManager em = EMUtils.getEntityManager()) {
 			// check if instructor with same username exists or not
 			Query query = em.createQuery("Select Count(i) From Instructor i WHERE username = :username");
 			query.setParameter("username", instructor.getUsername());
@@ -38,39 +36,140 @@ public class InstructorDaoImpl implements InstructorDao {
 
 			em.getTransaction().commit();
 		} catch (PersistenceException e) {
-			em.getTransaction().rollback();
 			System.out.println("Failed to register instructor, please try again");
-		} finally {
-			em.close();
-		}
+		} 
 
 	}
 
 	@Override
 	public void login(String username, String password) throws SomethingWentWrongException {
-		EntityManager em = null;
 
-		try {
-			em = EMUtils.getEntityManager();
+		try (EntityManager em = EMUtils.getEntityManager()){
 			// check if instructor with same username exists or not
 			Query query = em.createQuery(
-					"Select i From Instructor i WHERE username = :username AND password =:password AND is_deleted = false");
+					"Select i From Instructor i WHERE i.username = :username AND i.password =:password AND i.isDeleted = false");
 			query.setParameter("username", username);
 			query.setParameter("password", password);
-			List<Integer> listInt = (List<Integer>) query.getResultList();
-			if (listInt.size() == 0) {
+			List<Instructor> instructors = query.getResultList();
+			if (instructors.isEmpty()) {
 				// you are here means instructor with given name does not exists so throw
 				// exceptions
 				throw new SomethingWentWrongException("The username or password is incorrect");
 			}
-			LoggedInUserId.loggedInUserId = listInt.get(0);
+			LoggedInUserId.loggedInUserId = instructors.get(0).getInstructorId();
 		} catch (PersistenceException e) {
 			System.out.println("Failed to login instructor, please try again ");
+		} 
+	}
+
+	@Override
+	public Instructor getInstructorById(int instructorId) throws NoRecordFoundException {
+		EntityManager em = null;
+
+		try {
+			em = EMUtils.getEntityManager();
+			// check if instructor exists or not
+			Instructor instructor = em.find(Instructor.class, instructorId);
+			
+			if(instructor == null) {
+				throw new NoRecordFoundException("No instructor found with given id : " +instructorId);
+			}
+			return instructor;
+		} catch (PersistenceException e) {
+			System.out.println("Failed to register instructor, please try again");
+		} finally {
+			em.close();
+		}
+		return null;
+	}
+
+	@Override
+	public void updateInstructorDetails(Instructor instructor) throws NoRecordFoundException, SomethingWentWrongException {
+		EntityManager em = null;
+
+		try {
+			em = EMUtils.getEntityManager();
+			// check if instructor with given id exists
+			Instructor updatedInstructor = em.find(Instructor.class, instructor.getInstructorId());
+			if (updatedInstructor == null) {
+				throw new NoRecordFoundException("No instructor found with given id :" + instructor.getInstructorId());
+			}
+
+			// You are here means instructor exists with given id
+			// check if instructor is to be renamed
+			if (!updatedInstructor.getUsername().equals(instructor.getUsername())) {
+				// you are here means instructor is to be renamed, check for no existing instructor with
+				// new name.
+				// check if instructor with same name exists
+				Query query = em.createQuery("SELECT i FROM Instructor i WHERE username = :username");
+				query.setParameter("title", instructor.getUsername());
+				if ((Long) query.getSingleResult() > 0) {
+					// you are here means instructor with given name exists so throw exceptions
+					throw new SomethingWentWrongException("Instructor already exists with title " + instructor.getUsername());
+				}
+			}
+			// proceed for update operation
+			em.getTransaction().begin();
+			updatedInstructor.setUsername(instructor.getUsername());
+			updatedInstructor.setPassword(instructor.getPassword());
+			updatedInstructor.setContact(instructor.getContact());
+			updatedInstructor.setDob(instructor.getDob());
+			updatedInstructor.setEmail(instructor.getEmail());
+			em.getTransaction().commit();
+		} catch (PersistenceException e) {
+			em.getTransaction().rollback();
+			System.out.println("Failed to update instructor, please try again");
+		} finally {
+			em.close();
+		}
+		
+	}
+
+	@Override
+	public void deleteInstructorById(int instructorId) throws NoRecordFoundException {
+		EntityManager em = null;
+
+		try {
+			em = EMUtils.getEntityManager();
+			// check if instructor exists or not
+			Instructor instructor = em.find(Instructor.class, instructorId);
+			
+			if(instructor == null) {
+				throw new NoRecordFoundException("No instructor found with given id : " +instructorId);
+			}
+			em.getTransaction().begin();
+			em.remove(instructor);
+			em.getTransaction().commit();
+		} catch (PersistenceException e) {
+			em.getTransaction().rollback();
+			System.out.println("Failed to delete instructor, please try again");
 		} finally {
 			em.close();
 		}
 	}
 
+	@Override
+	public List<Instructor> getAllInstructor() throws NoRecordFoundException {
+		EntityManager em = null;
+
+		try {
+			em = EMUtils.getEntityManager();
+			Query query = em.createQuery("SELECT i FROM Instructor i");
+			List<Instructor> instructors = query.getResultList();
+
+			if (instructors.isEmpty()) {
+				System.out.println("No instructors found in the database.");
+			}
+
+			return instructors;
+		} catch (PersistenceException e) {
+			System.out.println("Failed to get instructors, please try again");
+		} finally {
+			em.close();
+		}
+		return null;
+	}
+	
 	@Override
 	public void createCourse(Course course) throws SomethingWentWrongException {
 		EntityManager em = null;
@@ -770,5 +869,7 @@ public class InstructorDaoImpl implements InstructorDao {
 		}
 		return null;
 	}
+
+	
 
 }

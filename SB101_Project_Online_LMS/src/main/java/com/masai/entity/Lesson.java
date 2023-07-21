@@ -33,11 +33,10 @@ public class Lesson {
 		super();
 	}
 
-	public Lesson(String title, String content, Course course) {
+	public Lesson(String title, String content) {
 		super();
 		this.title = title;
 		this.content = content;
-		this.course = course;
 	}
 
 	public int getLessonId() {

@@ -2,8 +2,6 @@ package com.masai.entity;
 
 import java.util.List;
 
-import org.hibernate.sql.ast.tree.update.Assignment;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

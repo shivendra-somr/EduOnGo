@@ -27,6 +27,17 @@ public class Grade {
     @Column(nullable = false)
     private int marks;
 
+    @Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
+	private boolean isDeleted;
+    
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+
 	public int getGradeId() {
 		return gradeId;
 	}
