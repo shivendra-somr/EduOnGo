@@ -23,8 +23,19 @@ public class Assignment {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+    
+    @Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
+	private boolean isDeleted;
 
-    @ManyToOne
+    public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+
+	@ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
 

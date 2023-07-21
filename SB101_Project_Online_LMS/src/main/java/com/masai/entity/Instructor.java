@@ -31,6 +31,17 @@ public class Instructor {
 
 	@Column(nullable = false)
 	private LocalDate dob;
+	
+	@Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
+	private boolean isDeleted;
+
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
 
 	// Define instructor-course association
 	@OneToMany(mappedBy = "instructor")
