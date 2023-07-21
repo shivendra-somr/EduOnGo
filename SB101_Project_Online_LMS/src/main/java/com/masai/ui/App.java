@@ -65,10 +65,10 @@ public class App {
 				adminLogin(sc);
 				break;
 			case 2:
-//				instructorLogin(sc);
+				InstructorUI.login(sc);
 				break;
 			case 3:
-//				instructorRegistration(sc);
+				InstructorUI.registration(sc);
 				break;
 			case 4:
 //				studentLogin(sc);
