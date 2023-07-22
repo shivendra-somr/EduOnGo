@@ -18,7 +18,7 @@ public class Course {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "course_id")
-	private int courseId;
+	private long courseId;
 
 	@Column(nullable = false)
 	private String title;
@@ -60,25 +60,22 @@ public class Course {
 		super();
 	}
 
-	public Course(String title, String description, Instructor instructor, int courseDuration, List<Lesson> lessons,
-			List<Assignment> assignments, List<Quiz> quizzes, Assessment assessment, List<Enrollment> enrollments) {
+	
+
+	public Course(String title, String description, int courseDuration) {
 		super();
 		this.title = title;
 		this.description = description;
-		this.instructor = instructor;
 		this.courseDuration = courseDuration;
-		this.lessons = lessons;
-		this.assignments = assignments;
-		this.quizzes = quizzes;
-		this.assessment = assessment;
-		this.enrollments = enrollments;
 	}
 
-	public int getCourseId() {
+
+
+	public long getCourseId() {
 		return courseId;
 	}
 
-	public void setCourseId(int courseId) {
+	public void setCourseId(long courseId) {
 		this.courseId = courseId;
 	}
 

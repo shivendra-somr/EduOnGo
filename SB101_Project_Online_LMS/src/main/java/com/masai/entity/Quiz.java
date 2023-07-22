@@ -12,20 +12,31 @@ import jakarta.persistence.ManyToOne;
 public class Quiz {
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "quiz_id")
-    private int quizId;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "quiz_id")
+	private long quizId;
 
-    @Column(nullable = false)
-    private String title;
+	@Column(nullable = false)
+	private String title;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
-    
-    @Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
+	@Column(columnDefinition = "TEXT")
+	private String description;
+
+	@Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
 	private boolean isDeleted;
 
-    public boolean isDeleted() {
+	public Quiz() {
+		super();
+	}
+
+	public Quiz(String title, String description, int timeLimit) {
+		super();
+		this.title = title;
+		this.description = description;
+		this.timeLimit = timeLimit;
+	}
+
+	public boolean isDeleted() {
 		return isDeleted;
 	}
 
@@ -34,17 +45,17 @@ public class Quiz {
 	}
 
 	@ManyToOne
-    @JoinColumn(name = "course_id")
-    private Course course;
+	@JoinColumn(name = "course_id")
+	private Course course;
 
-    @Column(name = "time_limit")
-    private int timeLimit;
+	@Column(name = "time_limit")
+	private int timeLimit;
 
-	public int getQuizId() {
+	public long getQuizId() {
 		return quizId;
 	}
 
-	public void setQuizId(int quizId) {
+	public void setQuizId(long quizId) {
 		this.quizId = quizId;
 	}
 
@@ -79,6 +90,5 @@ public class Quiz {
 	public void setTimeLimit(int timeLimit) {
 		this.timeLimit = timeLimit;
 	}
-    
-    
+
 }
