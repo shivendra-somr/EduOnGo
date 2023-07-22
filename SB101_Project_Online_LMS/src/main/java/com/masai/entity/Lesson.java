@@ -14,7 +14,7 @@ public class Lesson {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "lesson_id")
-	private int lessonId;
+	private long lessonId;
 
 	@Column(nullable = false)
 	private String title;
@@ -39,11 +39,11 @@ public class Lesson {
 		this.content = content;
 	}
 
-	public int getLessonId() {
+	public long getLessonId() {
 		return lessonId;
 	}
 
-	public void setLessonId(int lessonId) {
+	public void setLessonId(long lessonId) {
 		this.lessonId = lessonId;
 	}
 

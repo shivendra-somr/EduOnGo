@@ -12,22 +12,32 @@ import jakarta.persistence.OneToOne;
 public class Assessment {
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "assessment_id")
-    private int assessmentId;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "assessment_id")
+	private long assessmentId;
 
-    @Column(nullable = false)
-    private String title;
+	@Column(nullable = false)
+	private String title;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
+	@Column(columnDefinition = "TEXT")
+	private String description;
 
-    @OneToOne
-    @JoinColumn(name = "course_id")
-    private Course course;
-    
-    @Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
+	@OneToOne
+	@JoinColumn(name = "course_id")
+	private Course course;
+
+	@Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
 	private boolean isDeleted;
+
+	public Assessment() {
+		super();
+	}
+
+	public Assessment(String title, String description) {
+		super();
+		this.title = title;
+		this.description = description;
+	}
 
 	public boolean isDeleted() {
 		return isDeleted;
@@ -37,11 +47,11 @@ public class Assessment {
 		this.isDeleted = isDeleted;
 	}
 
-	public int getAssessmentId() {
+	public long getAssessmentId() {
 		return assessmentId;
 	}
 
-	public void setAssessmentId(int assessmentId) {
+	public void setAssessmentId(long assessmentId) {
 		this.assessmentId = assessmentId;
 	}
 
@@ -68,6 +78,5 @@ public class Assessment {
 	public void setCourse(Course course) {
 		this.course = course;
 	}
-    
-    
+
 }

@@ -1,6 +1,6 @@
 package com.masai.entity;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,7 +16,7 @@ public class Assignment {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "assignment_id")
-    private int assignmentId;
+    private long assignmentId;
 
     @Column(nullable = false)
     private String title;
@@ -24,7 +24,20 @@ public class Assignment {
     @Column(columnDefinition = "TEXT")
     private String description;
     
-    @Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
+    
+    
+    public Assignment() {
+		super();
+	}
+
+	public Assignment(String title, String description, LocalDate dueDate) {
+		super();
+		this.title = title;
+		this.description = description;
+		this.dueDate = dueDate;
+	}
+
+	@Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
 	private boolean isDeleted;
 
     public boolean isDeleted() {
@@ -40,13 +53,13 @@ public class Assignment {
     private Course course;
 
     @Column(name = "due_date")
-    private Date dueDate;
+    private LocalDate dueDate;
 
-	public int getAssignmentId() {
+	public long getAssignmentId() {
 		return assignmentId;
 	}
 
-	public void setAssignmentId(int assignmentId) {
+	public void setAssignmentId(long assignmentId) {
 		this.assignmentId = assignmentId;
 	}
 
@@ -74,11 +87,11 @@ public class Assignment {
 		this.course = course;
 	}
 
-	public Date getDueDate() {
+	public LocalDate getDueDate() {
 		return dueDate;
 	}
 
-	public void setDueDate(Date dueDate) {
+	public void setDueDate(LocalDate dueDate) {
 		this.dueDate = dueDate;
 	}
     

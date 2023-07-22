@@ -35,6 +35,19 @@ public class Student {
 	@Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
 	private boolean isDeleted;
 
+	public Student() {
+		super();
+	}
+
+	public Student(String username, String password, String email, String contact, Date dob) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.contact = contact;
+		this.dob = dob;
+	}
+
 	// Define student-course association
 	@OneToMany(mappedBy = "student")
 	private List<Enrollment> enrollments;
@@ -46,23 +59,6 @@ public class Student {
 	// Define student-assessment association
 	@OneToMany(mappedBy = "student")
 	private List<Result> results;
-
-	public Student() {
-		super();
-	}
-
-	public Student(String username, String password, String email, String contact, Date dob,
-			List<Enrollment> enrollments, List<Grade> grades, List<Result> results) {
-		super();
-		this.username = username;
-		this.password = password;
-		this.email = email;
-		this.contact = contact;
-		this.dob = dob;
-		this.enrollments = enrollments;
-		this.grades = grades;
-		this.results = results;
-	}
 
 	public int getStudentId() {
 		return studentId;
