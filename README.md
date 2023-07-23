@@ -15,11 +15,11 @@ The EduOnGo (OLMS) is a comprehensive software solution designed to support remo
 
 ## Domain Description
 
-The Online Learning Management System (OLMS) facilitates remote education and training, providing administrators, instructors, and students with a seamless platform for managing and accessing educational content. The system aims to foster a conducive environment for effective learning and teaching.
+The EduOnGo (OLMS) facilitates remote education and training, providing administrators, instructors, and students with a seamless platform for managing and accessing educational content. The system aims to foster a conducive environment for effective learning and teaching.
 
 ## Types of Users
 
-The OLMS accommodates the following types of users:
+The EduOnGo accommodates the following types of users:
 
 1. **Administrator**: Responsible for managing the overall system and overseeing course progress and statistics.
 
@@ -56,7 +56,7 @@ Students utilize the OLMS to access course materials, submit assignments, and mo
 
 ## Database Design
 
-The OLMS utilizes a relational database to capture and store information related to users, courses, enrollments, assignments, grades, assessments, and discussions. The database design includes the following tables:
+The EduOnGo utilizes a relational database to capture and store information related to users, courses, enrollments, assignments, grades, assessments, and discussions. The database design includes the following tables:
 
 1. **Student**: Stores information about students, including student ID, username, password, email, contact, and date of birth.
 
@@ -82,7 +82,7 @@ To maintain flexibility and security, database credentials are stored in a prope
 
 ## Contributing
 
-Contributions to the Online Learning Management System project are welcome! If you have any suggestions, improvements, or find issues, please feel free to open an issue or submit a pull request.
+Contributions to the EduOnGo project are welcome! If you have any suggestions, improvements, or find issues, please feel free to open an issue or submit a pull request.
 
 ## License
 
