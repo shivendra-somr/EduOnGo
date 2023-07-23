@@ -5,6 +5,7 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -44,11 +45,20 @@ public class Instructor {
 	}
 
 	// Define instructor-course association
-	@OneToMany(mappedBy = "instructor")
+	@OneToMany(mappedBy = "instructor", fetch = FetchType.EAGER)
 	private List<Course> courses;
 
 	public Instructor() {
 		super();
+	}
+	
+	
+
+	public Instructor(String email, String contact, String dob) {
+		super();
+		this.email = email;
+		this.contact = contact;
+		this.dob = LocalDate.parse(dob);
 	}
 
 	public Instructor(String username, String password, String email, String contact, String dob) {
@@ -114,6 +124,12 @@ public class Instructor {
 
 	public void setCourses(List<Course> courses) {
 		this.courses = courses;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Instructor Id : %s, username : %s, email : %s, contact : %s", instructorId, username,
+				email, contact);
 	}
 
 }

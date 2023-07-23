@@ -79,4 +79,9 @@ public class Lesson {
 		this.course = course;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("Lesson Id : %s, title : %s, content : %s", lessonId, title, content);
+	}
+
 }

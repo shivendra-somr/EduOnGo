@@ -27,21 +27,21 @@ public class InstructorServiceImpl implements InstructorService {
 	}
 
 	@Override
-	public Instructor getInstructorById(int instructorId) throws NoRecordFoundException {
+	public Instructor getInstructorById(long instructorId) throws NoRecordFoundException {
 		InstructorDao instructorDao = new InstructorDaoImpl();
 		return instructorDao.getInstructorById(instructorId);
 	}
 
 	@Override
-	public void updateInstructorDetails(Instructor instructor)
+	public void updateInstructorDetails(long instructorId,Instructor instructor)
 			throws NoRecordFoundException, SomethingWentWrongException {
 		InstructorDao instructorDao = new InstructorDaoImpl();
-		instructorDao.updateInstructorDetails(instructor);
+		instructorDao.updateInstructorDetails(instructorId,instructor);
 		;
 	}
 
 	@Override
-	public void deleteInstructorById(int instructorId) throws NoRecordFoundException {
+	public void deleteInstructorById(long instructorId) throws NoRecordFoundException {
 		InstructorDao instructorDao = new InstructorDaoImpl();
 		instructorDao.deleteInstructorById(instructorId);
 	}
@@ -50,6 +50,35 @@ public class InstructorServiceImpl implements InstructorService {
 	public List<Instructor> getAllInstructor() throws NoRecordFoundException {
 		InstructorDao instructorDao = new InstructorDaoImpl();
 		return instructorDao.getAllInstructor();
+	}
+
+	@Override
+	public void changePassword(long loggedInUserId, String currentPassword, String newPassword) throws NoRecordFoundException, SomethingWentWrongException {
+		// Retrieve the instructor from the database using the instructorId
+		InstructorDao instructorDao = new InstructorDaoImpl();
+        Instructor instructor = instructorDao.getInstructorById(loggedInUserId);
+
+        // Check if the instructor exists
+        if (instructor == null) {
+            throw new NoRecordFoundException("Instructor with ID " + loggedInUserId + " not found.");
+        }
+
+        // Verify the current password against the one stored in the database
+        if (!instructor.getPassword().equals(currentPassword)) {
+            throw new SomethingWentWrongException("Incorrect current password. Please try again.");
+        }
+
+        // Update the instructor's password with the new one
+        instructor.setPassword(newPassword);
+        try {
+			instructorDao.updateInstructorDetails(loggedInUserId,instructor);
+		} catch (NoRecordFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SomethingWentWrongException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

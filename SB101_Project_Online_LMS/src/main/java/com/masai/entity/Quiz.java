@@ -91,4 +91,10 @@ public class Quiz {
 		this.timeLimit = timeLimit;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("Quiz Id : %s, Title : %s, Description : %s, Time Limit: %s", quizId, title, description,
+				timeLimit);
+	}
+
 }

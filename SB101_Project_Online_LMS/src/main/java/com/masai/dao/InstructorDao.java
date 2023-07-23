@@ -17,11 +17,11 @@ public interface InstructorDao {
 
 	void login(String username, String password) throws SomethingWentWrongException;
 
-	Instructor getInstructorById(int instructorId) throws NoRecordFoundException;
+	Instructor getInstructorById(long instructorId) throws NoRecordFoundException;
 
-	void updateInstructorDetails(Instructor instructor) throws NoRecordFoundException, SomethingWentWrongException;
+	void updateInstructorDetails(long instructorId, Instructor instructor) throws NoRecordFoundException, SomethingWentWrongException;
 
-	void deleteInstructorById(int instructorId) throws NoRecordFoundException;
+	void deleteInstructorById(long instructorId) throws NoRecordFoundException;
 
 	List<Instructor> getAllInstructor() throws NoRecordFoundException;
 

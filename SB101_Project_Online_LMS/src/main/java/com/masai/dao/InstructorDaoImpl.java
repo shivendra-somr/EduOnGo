@@ -63,7 +63,7 @@ public class InstructorDaoImpl implements InstructorDao {
 	}
 
 	@Override
-	public Instructor getInstructorById(int instructorId) throws NoRecordFoundException {
+	public Instructor getInstructorById(long instructorId) throws NoRecordFoundException {
 		EntityManager em = null;
 
 		try {
@@ -84,16 +84,16 @@ public class InstructorDaoImpl implements InstructorDao {
 	}
 
 	@Override
-	public void updateInstructorDetails(Instructor instructor)
+	public void updateInstructorDetails(long instructorId, Instructor instructor)
 			throws NoRecordFoundException, SomethingWentWrongException {
 		EntityManager em = null;
 
 		try {
 			em = EMUtils.getEntityManager();
 			// check if instructor with given id exists
-			Instructor updatedInstructor = em.find(Instructor.class, instructor.getInstructorId());
+			Instructor updatedInstructor = em.find(Instructor.class, instructorId);
 			if (updatedInstructor == null) {
-				throw new NoRecordFoundException("No instructor found with given id :" + instructor.getInstructorId());
+				throw new NoRecordFoundException("No instructor found with given id :" + instructorId);
 			}
 
 			// You are here means instructor exists with given id
@@ -129,7 +129,7 @@ public class InstructorDaoImpl implements InstructorDao {
 	}
 
 	@Override
-	public void deleteInstructorById(int instructorId) throws NoRecordFoundException {
+	public void deleteInstructorById(long instructorId) throws NoRecordFoundException {
 		EntityManager em = null;
 
 		try {
@@ -141,7 +141,8 @@ public class InstructorDaoImpl implements InstructorDao {
 				throw new NoRecordFoundException("No instructor found with given id : " + instructorId);
 			}
 			em.getTransaction().begin();
-			em.remove(instructor);
+			instructor.setDeleted(true);
+			em.merge(instructor);
 			em.getTransaction().commit();
 		} catch (PersistenceException e) {
 			em.getTransaction().rollback();

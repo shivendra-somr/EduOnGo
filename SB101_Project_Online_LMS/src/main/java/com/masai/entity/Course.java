@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -37,23 +38,23 @@ public class Course {
 	private int courseDuration;
 
 	// Define course-lesson association
-	@OneToMany(mappedBy = "course")
+	@OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
 	private List<Lesson> lessons;
 
 	// Define course-assignment association
-	@OneToMany(mappedBy = "course")
+	@OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
 	private List<Assignment> assignments;
 
 	// Define course-quiz association
-	@OneToMany(mappedBy = "course")
+	@OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
 	private List<Quiz> quizzes;
 
 	// Define course-assessment association
-	@OneToOne(mappedBy = "course")
+	@OneToOne(mappedBy = "course", fetch = FetchType.EAGER)
 	private Assessment assessment;
 
 	// Define course-enrollment association
-	@OneToMany(mappedBy = "course")
+	@OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
 	private List<Enrollment> enrollments;
 
 	public Course() {
@@ -157,6 +158,14 @@ public class Course {
 
 	public void setEnrollments(List<Enrollment> enrollments) {
 		this.enrollments = enrollments;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return String.format("Course Id : %s, title : %s, description : %s, courseDuration : %s", courseId, title,
+				description, courseDuration);
 	}
 
 }

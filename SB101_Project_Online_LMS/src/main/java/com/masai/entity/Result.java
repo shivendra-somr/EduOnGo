@@ -69,6 +69,12 @@ public class Result {
 	public void setScore(int score) {
 		this.score = score;
 	}
+
+	@Override
+	public String toString() {
+		return String.format("Result Id : %s, student : %s, assessment : %s, score : %s", resultId, student, assessment,
+				score);
+	}
     
     
 }

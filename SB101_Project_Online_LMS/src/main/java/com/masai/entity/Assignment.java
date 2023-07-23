@@ -14,19 +14,17 @@ import jakarta.persistence.ManyToOne;
 public class Assignment {
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "assignment_id")
-    private long assignmentId;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "assignment_id")
+	private long assignmentId;
 
-    @Column(nullable = false)
-    private String title;
+	@Column(nullable = false)
+	private String title;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
-    
-    
-    
-    public Assignment() {
+	@Column(columnDefinition = "TEXT")
+	private String description;
+
+	public Assignment() {
 		super();
 	}
 
@@ -40,7 +38,7 @@ public class Assignment {
 	@Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
 	private boolean isDeleted;
 
-    public boolean isDeleted() {
+	public boolean isDeleted() {
 		return isDeleted;
 	}
 
@@ -49,11 +47,11 @@ public class Assignment {
 	}
 
 	@ManyToOne
-    @JoinColumn(name = "course_id")
-    private Course course;
+	@JoinColumn(name = "course_id")
+	private Course course;
 
-    @Column(name = "due_date")
-    private LocalDate dueDate;
+	@Column(name = "due_date")
+	private LocalDate dueDate;
 
 	public long getAssignmentId() {
 		return assignmentId;
@@ -94,6 +92,11 @@ public class Assignment {
 	public void setDueDate(LocalDate dueDate) {
 		this.dueDate = dueDate;
 	}
-    
-    
+
+	@Override
+	public String toString() {
+		return String.format("Assignment Id : %s, title : %s, description : %s, dueDate : %s", assignmentId, title,
+				description, dueDate);
+	}
+
 }

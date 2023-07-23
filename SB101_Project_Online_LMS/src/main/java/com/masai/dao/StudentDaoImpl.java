@@ -22,6 +22,7 @@ public class StudentDaoImpl implements StudentDao {
 			if (student == null) {
 				throw new NoRecordFoundException("Student not found with provided id");
 			}
+			return student;
 		} catch (PersistenceException e) {
 			System.out.println("Something went wrong, please try again");
 		} finally {
@@ -59,19 +60,87 @@ public class StudentDaoImpl implements StudentDao {
 	}
 
 	@Override
-	public void update(Student student) throws SomethingWentWrongException {
-		
+	public void update(long studentId, Student student) throws NoRecordFoundException, SomethingWentWrongException {
+		EntityManager em = null;
+		try {
+			em = EMUtils.getEntityManager();
+
+			// Check if the student with the given ID exists
+			Student updatedStudent = em.find(Student.class, studentId);
+			if (updatedStudent == null) {
+				throw new NoRecordFoundException("No student found with ID: " + studentId);
+			}
+
+			// You are here means the student exists with the given ID
+			// Check if student email is being updated and if the new email already exists
+			if (!updatedStudent.getEmail().equals(student.getEmail())) {
+				Query query = em.createQuery("SELECT count(s) FROM Student s WHERE email = :email");
+				query.setParameter("email", student.getEmail());
+				if ((Long) query.getSingleResult() > 0) {
+					throw new SomethingWentWrongException(
+							"Student with email " + student.getEmail() + " already exists.");
+				}
+			}
+
+			em.getTransaction().begin();
+			updatedStudent.setFirstName(student.getFirstName());
+			updatedStudent.setLastName(student.getLastName());
+			updatedStudent.setUsername(student.getUsername());
+			updatedStudent.setPassword(student.getPassword());
+			updatedStudent.setEmail(student.getEmail());
+			updatedStudent.setContact(student.getContact());
+			updatedStudent.setDob(student.getDob());
+			em.getTransaction().commit();
+
+		} catch (SomethingWentWrongException e) {
+			em.getTransaction().rollback();
+			throw new SomethingWentWrongException("Failed to update student, please try again");
+		} finally {
+			if (em != null) {
+				em.close();
+			}
+		}
 	}
 
 	@Override
-	public void delete(Student student) {
-		// TODO Auto-generated method stub
+	public void delete(long studentId) throws NoRecordFoundException {
+		EntityManager em = null;
+		try {
+			em = EMUtils.getEntityManager();
+			// check if student with given id exists
+			Student deletedStudent = em.find(Student.class, studentId);
+			if (deletedStudent == null) {
+				throw new NoRecordFoundException("No student found with given id: " + studentId);
+			}
 
+			em.getTransaction().begin();
+			deletedStudent.setDeleted(true);
+			em.getTransaction().commit();
+		} catch (NoRecordFoundException e) {
+			em.getTransaction().rollback();
+			throw new NoRecordFoundException("Failed to delete student, please try again");
+		} finally {
+			em.close();
+		}
 	}
 
 	@Override
 	public List<Student> getAll() {
-		// TODO Auto-generated method stub
+		EntityManager em = null;
+		try {
+			em = EMUtils.getEntityManager();
+			// Create and execute the query to get all students
+			Query query = em.createQuery("SELECT s FROM Student s");
+			List<Student> students = query.getResultList();
+			if (students.isEmpty()) {
+				System.out.println("No students found in the database.");
+			}
+			return students;
+		} catch (PersistenceException e) {
+			System.out.println("Failed to get students, please try again");
+		} finally {
+			em.close();
+		}
 		return null;
 	}
 

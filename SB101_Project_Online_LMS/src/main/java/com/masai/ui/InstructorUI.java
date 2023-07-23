@@ -27,6 +27,8 @@ import com.masai.service.LessonService;
 import com.masai.service.LessonServiceImpl;
 import com.masai.service.QuizService;
 import com.masai.service.QuizServiceImpl;
+import com.masai.service.StudentService;
+import com.masai.service.StudentServiceImpl;
 
 public class InstructorUI {
 	public static void displayMenu(Scanner sc) {
@@ -34,6 +36,8 @@ public class InstructorUI {
 		int choice = 0;
 
 		do {
+			System.out.println("\tInstructor Menu");
+			System.out.println("***********************************");
 			System.out.println("""
 					1. Course Menu
 					2. Lesson Menu
@@ -45,9 +49,9 @@ public class InstructorUI {
 					8. Delete account
 					0. Exit
 					""");
+			System.out.println("***********************************");
 			System.out.print("Enter you choice");
 			choice = sc.nextInt();
-			;
 			switch (choice) {
 			case 1:
 				courseMenu(sc);
@@ -65,13 +69,13 @@ public class InstructorUI {
 				quizMenu(sc);
 				break;
 			case 6:
-				// changePassword(sc);
+				changePassword(sc);
 				break;
 			case 7:
-				// updateDetails(sc);
+				updateDetails(sc);
 				break;
 			case 8:
-				// deleteAccount(sc);
+				deleteAccount(sc);
 				break;
 			case 0:
 				System.out.println("Bye Bye Instructor");
@@ -83,6 +87,84 @@ public class InstructorUI {
 			}
 		} while (choice != 0);
 
+	}
+
+	static void deleteAccount(Scanner sc) {
+		System.out.println("\tDelete Account");
+		System.out.print("Are you sure you want to delete your account? (yes/no): ");
+		String confirmation = sc.next();
+
+		if (confirmation.equalsIgnoreCase("yes")) {
+			// Call the corresponding StudentService method to delete the account from the
+			// database
+			InstructorService instrutorService = new InstructorServiceImpl();
+
+			try {
+				instrutorService.deleteInstructorById(LoggedInUserId.loggedInUserId);
+
+				System.out.println("Account deleted successfully!");
+				System.out.println("***********************************");
+				LoggedInUserId.loggedInUserId = -1;
+			} catch (NoRecordFoundException e) {
+				System.out.println(e.getMessage());
+			}
+		} else {
+			System.out.println("Account deletion cancelled.");
+			System.out.println("***********************************");
+		}
+	}
+
+	static void updateDetails(Scanner sc) {
+		System.out.println("Update Instructor Details");
+		System.out.println("***********************************");
+		System.out.print("Enter new email: ");
+		String newEmail = sc.next();
+		System.out.print("Enter new contact number: ");
+		String newContact = sc.next();
+		System.out.print("Enter new date of birth (in the format yyyy-MM-dd): ");
+		String newDobStr = sc.next();
+
+		Instructor instructor = new Instructor(newEmail, newContact, newDobStr);
+		// Call the corresponding InstructorService method to update the details in the
+		// database
+		InstructorService instructorService = new InstructorServiceImpl();
+
+		try {
+			instructorService.updateInstructorDetails(LoggedInUserId.loggedInUserId, instructor);
+			System.out.println("Instructor details updated successfully!");
+			System.out.println("***********************************");
+		} catch (SomethingWentWrongException | NoRecordFoundException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	static void changePassword(Scanner sc) {
+		System.out.println("\tChange Password");
+		System.out.println("***********************************");
+		System.out.print("Enter current password: ");
+		String currentPassword = sc.next();
+		System.out.print("Enter new password: ");
+		String newPassword = sc.next();
+		System.out.print("Confirm new password: ");
+		String confirmPassword = sc.next();
+
+		// Verify the new password and confirm password match
+		if (newPassword.equals(confirmPassword)) {
+			InstructorService instructorService = new InstructorServiceImpl();
+
+			try {
+				// Call the corresponding InstructorService method to update the password
+				instructorService.changePassword(LoggedInUserId.loggedInUserId, currentPassword, newPassword);
+
+				System.out.println("Password changed successfully!");
+				System.out.println("***********************************");
+			} catch (SomethingWentWrongException | NoRecordFoundException e) {
+				System.out.println(e.getMessage());
+			}
+		} else {
+			System.out.println("New password and confirm password do not match!");
+			System.out.println("***********************************");
+		}
 	}
 
 	public static void login(Scanner sc) {
@@ -104,6 +186,8 @@ public class InstructorUI {
 	}
 
 	public static void registration(Scanner sc) {
+		System.out.println("\tInstructor Registration");
+		System.out.println("***********************************");
 		System.out.print("Enter username : ");
 		String username = sc.next();
 
@@ -124,7 +208,8 @@ public class InstructorUI {
 		InstructorService service = new InstructorServiceImpl();
 		try {
 			service.registration(instructor);
-			System.out.println("Registration completed successfully");
+			System.out.println("Registration successful! You can now log in with your credentials.");
+			System.out.println("***********************************");
 		} catch (SomethingWentWrongException e) {
 			System.out.println(e.getMessage());
 		}
@@ -135,6 +220,8 @@ public class InstructorUI {
 
 		int choice = 0;
 		do {
+			System.out.println("\tCourse Menu");
+			System.out.println("***********************************");
 			System.out.println("""
 					1. Create new course
 					2. Update existing course
@@ -143,6 +230,7 @@ public class InstructorUI {
 					5. Get list of all courses
 					0. Exit
 					""");
+			System.out.println("***********************************");
 			System.out.print("Enter you choice: ");
 			choice = sc.nextInt();
 			switch (choice) {
@@ -162,6 +250,7 @@ public class InstructorUI {
 				try {
 					service.createCourse(course);
 					System.out.println("Course created successfully");
+					System.out.println("***********************************");
 				} catch (SomethingWentWrongException e) {
 					System.out.println(e.getMessage());
 				}
@@ -183,6 +272,8 @@ public class InstructorUI {
 				CourseService updateService = new CourseServiceImpl();
 				try {
 					updateService.updateCourse(courseId, updatedCourse);
+					System.out.println("Course updated successfully!");
+					System.out.println("***********************************");
 				} catch (SomethingWentWrongException | NoRecordFoundException e) {
 					System.out.println(e.getMessage());
 				}
@@ -195,6 +286,8 @@ public class InstructorUI {
 				CourseService deleteService = new CourseServiceImpl();
 				try {
 					deleteService.deleteCourse(deleteCourseId);
+					System.out.println("Course deleted successfully!");
+					System.out.println("***********************************");
 				} catch (NoRecordFoundException e) {
 					System.out.println(e.getMessage());
 				}
@@ -206,7 +299,10 @@ public class InstructorUI {
 
 				CourseService getService = new CourseServiceImpl();
 				try {
-					getService.getCourseById(getCourseId);
+					Course getCourse = getService.getCourseById(getCourseId);
+
+					System.out.println(getCourse);
+					System.out.println("***********************************");
 				} catch (NoRecordFoundException e) {
 					System.out.println(e.getMessage());
 				}
@@ -217,9 +313,11 @@ public class InstructorUI {
 				List<Course> courseList = allService.getAllCourses();
 
 				courseList.forEach(c -> System.out.println(c));
+				System.out.println("***********************************");
 				break;
 			case 0:
 				System.out.println("Back to Main Menu");
+				System.out.println("***********************************");
 				displayMenu(sc);
 				break;
 			default:
@@ -237,6 +335,8 @@ public class InstructorUI {
 		LessonService lessonService = new LessonServiceImpl(); // Replace LessonServiceImpl with your actual service
 																// implementation class
 		do {
+			System.out.println("\tLessong Menu");
+			System.out.println("***********************************");
 			System.out.println("Lesson Menu:");
 			System.out.println("1. Create Lesson");
 			System.out.println("2. Read Lesson");
@@ -244,6 +344,7 @@ public class InstructorUI {
 			System.out.println("4. Delete Lesson");
 			System.out.println("5. Get All Lessons");
 			System.out.println("0. Go Back to Main Menu");
+			System.out.println("***********************************");
 			System.out.print("Enter your choice: ");
 			choice = sc.nextInt();
 			switch (choice) {
@@ -258,6 +359,8 @@ public class InstructorUI {
 				Lesson lesson = new Lesson(title, content);
 				try {
 					lessonService.createLesson(lesson);
+					System.out.println("Lesson creatred successfully!");
+					System.out.println("***********************************");
 				} catch (SomethingWentWrongException e) {
 					System.out.println(e.getMessage());
 				}
@@ -272,6 +375,7 @@ public class InstructorUI {
 					System.out.println("Lesson ID: " + readLesson.getLessonId());
 					System.out.println("Title: " + readLesson.getTitle());
 					System.out.println("Content: " + readLesson.getContent());
+					System.out.println("***********************************");
 				} catch (NoRecordFoundException e) {
 					System.out.println(e.getMessage());
 				}
@@ -290,6 +394,7 @@ public class InstructorUI {
 				try {
 					lessonService.updateLesson(lessonIdToUpdate, updatedLesson);
 					System.out.println("Lesson updated successfully");
+					System.out.println("***********************************");
 				} catch (SomethingWentWrongException | NoRecordFoundException e) {
 					System.out.println(e.getMessage());
 				}
@@ -301,16 +406,21 @@ public class InstructorUI {
 				// Call the deleteLesson method from the service implementation class
 				try {
 					lessonService.deleteLesson(lessonIdToDelete);
+					System.out.println("Lesson deleted successfully!");
+					System.out.println("***********************************");
 				} catch (NoRecordFoundException e) {
 					System.out.println(e.getMessage());
 				}
 				break;
 			case 5:
-				lessonService.getAllLessons();
+				List<Lesson> list = lessonService.getAllLessons();
+				list.forEach(l -> System.out.println(l));
+				System.out.println("***********************************");
 				break;
 			case 0:
 				// Go back to the main menu
 				System.out.println("Going back to the main menu.");
+				System.out.println("***********************************");
 				break;
 			default:
 				System.out.println("Invalid choice. Please enter a valid option.");
@@ -327,15 +437,16 @@ public class InstructorUI {
 		// Instantiate the service implementation class
 		QuizService quizService = new QuizServiceImpl(); // Replace QuizServiceImpl with your actual service
 															// implementation class
-
 		do {
 			// Show menu options
-			System.out.println("Quiz Menu:");
+			System.out.println("\tQuiz Menu");
+			System.out.println("***********************************");
 			System.out.println("1. Create Quiz");
 			System.out.println("2. Read Quiz");
 			System.out.println("3. Update Quiz");
 			System.out.println("4. Delete Quiz");
 			System.out.println("0. Go Back to Main Menu");
+			System.out.println("***********************************");
 			choice = sc.nextInt();
 			switch (choice) {
 			case 1:
@@ -352,6 +463,8 @@ public class InstructorUI {
 				Quiz createdQuiz = new Quiz(title, description, timeLimit);
 				try {
 					quizService.createQuiz(createdQuiz);
+					System.out.println("Quiz created successfully!");
+					System.out.println("***********************************");
 				} catch (SomethingWentWrongException e) {
 					System.out.println(e.getMessage());
 				}
@@ -368,6 +481,7 @@ public class InstructorUI {
 						System.out.println("Title: " + readQuiz.getTitle());
 						System.out.println("Desription: " + readQuiz.getDescription());
 					}
+					System.out.println("***********************************");
 				} catch (NoRecordFoundException e) {
 					System.out.println(e.getMessage());
 				}
@@ -391,6 +505,8 @@ public class InstructorUI {
 				// Call the updateQuiz method from the service implementation class
 				try {
 					quizService.updateQuiz(quizIdToUpdate, updatedQuiz);
+					System.out.println("Quiz updated successfully!");
+					System.out.println("***********************************");
 				} catch (NoRecordFoundException | SomethingWentWrongException e) {
 					System.out.println(e.getMessage());
 				}
@@ -402,16 +518,21 @@ public class InstructorUI {
 				// Call the deleteQuiz method from the service implementation class
 				try {
 					quizService.deleteQuiz(quizIdToDelete);
+					System.out.println("Quiz deleted successfully!");
+					System.out.println("***********************************");
 				} catch (NoRecordFoundException e) {
 					System.out.println(e.getMessage());
 				}
 				break;
 			case 5:
-				quizService.getAllQuizzes();
+				List<Quiz> list = quizService.getAllQuizzes();
+				list.forEach(q -> System.out.println(q));
+				System.out.println("***********************************");
 				break;
 			case 0:
 				// Go back to the main menu
 				System.out.println("Going back to the main menu.");
+				System.out.println("***********************************");
 				break;
 			default:
 				System.out.println("Invalid choice. Please enter a valid option.");
@@ -426,13 +547,15 @@ public class InstructorUI {
 		int choice = 0;
 		AssignmentService assignmentService = new AssignmentServiceImpl();
 		do {
-			System.out.println("Assignment Menu:");
+			System.out.println("\tAssignment Menu");
+			System.out.println("***********************************");
 			System.out.println("1. Create Assignment");
 			System.out.println("2. Read Assignment");
 			System.out.println("3. Update Assignment");
 			System.out.println("4. Delete Assignment");
 			System.out.println("5. Get All Assignments");
 			System.out.println("0. Go Back to Main Menu");
+			System.out.println("***********************************");
 			System.out.print("Enter your choice: ");
 			choice = sc.nextInt();
 			switch (choice) {
@@ -450,6 +573,8 @@ public class InstructorUI {
 				Assignment createdAssignment = new Assignment(title, description, date);
 				try {
 					assignmentService.createAssignment(createdAssignment);
+					System.out.println("Assignment created successfully!");
+					System.out.println("***********************************");
 				} catch (SomethingWentWrongException e) {
 					System.out.println(e.getMessage());
 				}
@@ -468,6 +593,7 @@ public class InstructorUI {
 						System.out.println("Title: " + assignment.getTitle());
 						System.out.println("Description: " + assignment.getDescription());
 					}
+					System.out.println("***********************************");
 				} catch (NoRecordFoundException e) {
 					System.out.println(e.getMessage());
 				}
@@ -491,6 +617,8 @@ public class InstructorUI {
 				// Call the updateAssignment method from the service implementation class
 				try {
 					assignmentService.updateAssignment(assignmentIdToUpdate, updatedAssignment);
+					System.out.println("Assignment updated successfully!");
+					System.out.println("***********************************");
 				} catch (SomethingWentWrongException | NoRecordFoundException e) {
 					System.out.println(e.getMessage());
 				}
@@ -503,17 +631,22 @@ public class InstructorUI {
 				// Call the deleteAssignment method from the service implementation class
 				try {
 					assignmentService.deleteAssignment(assignmentIdToDelete);
+					System.out.println("Assignment deleted successfully!");
+					System.out.println("***********************************");
 				} catch (NoRecordFoundException e) {
 					System.out.println(e.getMessage());
 				}
 
 				break;
 			case 5:
-				assignmentService.getAllAssignments();
+				List<Assignment> list = assignmentService.getAllAssignments();
+				list.forEach(a -> System.out.println(a));
+				System.out.println("***********************************");
 				break;
 			case 0:
 				// Go back to the main menu
 				System.out.println("Going back to the main menu.");
+				System.out.println("***********************************");
 				break;
 			default:
 				System.out.println("Invalid choice. Please enter a valid option.");
@@ -528,13 +661,15 @@ public class InstructorUI {
 		int choice = 0;
 		AssessmentService assessmentService = new AssessmentServiceImpl();
 		do {
-			System.out.println("Assessment Menu:");
+			System.out.println("\tAssessment Menu");
+			System.out.println("***********************************");
 			System.out.println("1. Create Assessment");
 			System.out.println("2. Read Assessment");
 			System.out.println("3. Update Assessment");
 			System.out.println("4. Delete Assessment");
 			System.out.println("5. Get All Assessments");
 			System.out.println("0. Go Back to Main Menu");
+			System.out.println("***********************************");
 			System.out.print("Enter your choice: ");
 			choice = sc.nextInt();
 			switch (choice) {
@@ -550,7 +685,8 @@ public class InstructorUI {
 				Assessment createdAssignment = new Assessment(title, description);
 				try {
 					assessmentService.createAssessment(createdAssignment);
-					;
+					System.out.println("Assessment created successfully!");
+					System.out.println("***********************************");
 				} catch (SomethingWentWrongException e) {
 					System.out.println(e.getMessage());
 				}
@@ -569,6 +705,7 @@ public class InstructorUI {
 						System.out.println("Title: " + assessment.getTitle());
 						System.out.println("Description: " + assessment.getDescription());
 					}
+					System.out.println("***********************************");
 				} catch (NoRecordFoundException e) {
 					System.out.println(e.getMessage());
 				}
@@ -589,6 +726,8 @@ public class InstructorUI {
 				// Call the updateAssignment method from the service implementation class
 				try {
 					assessmentService.updateAssessment(assessmentIdToUpdate, assessment);
+					System.out.println("Assessment updated successfully!");
+					System.out.println("***********************************");
 				} catch (SomethingWentWrongException | NoRecordFoundException e) {
 					System.out.println(e.getMessage());
 				}
@@ -601,17 +740,22 @@ public class InstructorUI {
 				// Call the deleteAssignment method from the service implementation class
 				try {
 					assessmentService.deleteAssessment(assessmentIdToDelete);
+					System.out.println("Assessment deleted successfully!");
+					System.out.println("***********************************");
 				} catch (NoRecordFoundException e) {
 					System.out.println(e.getMessage());
 				}
 
 				break;
 			case 5:
-				assessmentService.getAllAssessments();
+				List<Assessment> list = assessmentService.getAllAssessments();
+				list.forEach(a -> System.out.println(a));
+				System.out.println("***********************************");
 				break;
 			case 0:
 				// Go back to the main menu
 				System.out.println("Going back to the main menu.");
+				System.out.println("***********************************");
 				break;
 			default:
 				System.out.println("Invalid choice. Please enter a valid option.");

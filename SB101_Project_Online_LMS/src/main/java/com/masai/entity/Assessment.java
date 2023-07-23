@@ -79,4 +79,10 @@ public class Assessment {
 		this.course = course;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("Assessment Id : %s, title : %s, description : %s", assessmentId, title,
+				description);
+	}
+
 }

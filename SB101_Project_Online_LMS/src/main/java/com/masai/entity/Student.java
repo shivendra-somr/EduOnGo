@@ -1,10 +1,11 @@
 package com.masai.entity;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,7 +17,13 @@ public class Student {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "student_id")
-	private int studentId;
+	private long studentId;
+
+	@Column(nullable = false)
+	private String firstName;
+
+	@Column(nullable = false)
+	private String lastName;
 
 	@Column(nullable = false, unique = true)
 	private String username;
@@ -30,7 +37,7 @@ public class Student {
 	private String contact;
 
 	@Column(nullable = false)
-	private Date dob;
+	private LocalDate dob;
 
 	@Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
 	private boolean isDeleted;
@@ -39,32 +46,42 @@ public class Student {
 		super();
 	}
 
-	public Student(String username, String password, String email, String contact, Date dob) {
+	public Student(String firstName, String lastName, String username, String password, String email, String contact,
+			String dob) {
 		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
 		this.username = username;
 		this.password = password;
 		this.email = email;
 		this.contact = contact;
-		this.dob = dob;
+		this.dob = LocalDate.parse(dob);
+	}
+
+	public Student(String email, String contact, String dob) {
+		super();
+		this.email = email;
+		this.contact = contact;
+		this.dob = LocalDate.parse(dob);
 	}
 
 	// Define student-course association
-	@OneToMany(mappedBy = "student")
+	@OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
 	private List<Enrollment> enrollments;
 
 	// Define student-grade association
-	@OneToMany(mappedBy = "student")
+	@OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
 	private List<Grade> grades;
 
 	// Define student-assessment association
-	@OneToMany(mappedBy = "student")
+	@OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
 	private List<Result> results;
 
-	public int getStudentId() {
+	public long getStudentId() {
 		return studentId;
 	}
 
-	public void setStudentId(int studentId) {
+	public void setStudentId(long studentId) {
 		this.studentId = studentId;
 	}
 
@@ -100,11 +117,11 @@ public class Student {
 		this.contact = contact;
 	}
 
-	public Date getDob() {
+	public LocalDate getDob() {
 		return dob;
 	}
 
-	public void setDob(Date dob) {
+	public void setDob(LocalDate dob) {
 		this.dob = dob;
 	}
 
@@ -136,8 +153,30 @@ public class Student {
 		return results;
 	}
 
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
 	public void setResults(List<Result> results) {
 		this.results = results;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Student Id : %s, firstName : %s, lastName : %s, email : %s, contact : %s", studentId,
+				firstName, lastName, email, contact);
 	}
 
 }

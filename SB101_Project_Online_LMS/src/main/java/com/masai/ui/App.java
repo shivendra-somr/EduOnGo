@@ -4,27 +4,30 @@ import java.util.Scanner;
 
 public class App {
 	static void displayAdminMenu() {
+		System.out.println("\tAdmin Menu");
+		System.out.println("***********************************");
 		System.out.println("1. Monitor Course Progress");
 		System.out.println("2. Track Student Performance by Id");
 		System.out.println("3. Generate Report on Course Statistics");
 		System.out.println("0. Logout");
+		System.out.println("***********************************");
 	}
 
 	static void adminMenu(Scanner sc) {
 		int choice = 0;
 		do {
 			displayAdminMenu();
-			System.out.print("Enter choice");
+			System.out.print("Enter your choice : ");
 			choice = sc.nextInt();
 			switch(choice) {
 				case 1:
-//					monitorCourseProgress(sc);
+					AdminUI.monitorCourseProgress(sc);
 					break;
 				case 2:
-//					trackStudent(sc);
+					AdminUI.trackStudent(sc);
 					break;
 				case 3:
-//					generateReportOnCourseStatistics(sc);
+					AdminUI.generateReportOnCourseStatistics(sc);
 					break;
 				case 0:
 					System.out.println("Bye Bye Admin");
@@ -35,6 +38,8 @@ public class App {
 		} while (choice != 0);
 
 	}
+
+	
 
 	static void adminLogin(Scanner sc) {
 		System.out.print("Enter username ");
@@ -52,12 +57,15 @@ public class App {
 		Scanner sc = new Scanner(System.in);
 		int choice = 0;
 		do {
+			System.out.println("\tWelcome to EduOnGo");
+			System.out.println("***********************************");
 			System.out.println("1. Admin Login");
 			System.out.println("2. Intructor Login");
 			System.out.println("3. Instructor Registration");
 			System.out.println("4. Student Login");
 			System.out.println("5. Student Registration");
 			System.out.println("0. Exit");
+			System.out.println("***********************************");
 			System.out.print("Enter Selection ");
 			choice = sc.nextInt();
 			switch (choice) {
@@ -71,10 +79,10 @@ public class App {
 				InstructorUI.registration(sc);
 				break;
 			case 4:
-//				studentLogin(sc);
+				StudentUI.studentLogin(sc);
 				break;
 			case 5:
-//				studentRegistration(sc);
+				StudentUI.studentRegistration(sc);
 				break;
 			case 0:
 				System.out.println("Thanks for using the services");
