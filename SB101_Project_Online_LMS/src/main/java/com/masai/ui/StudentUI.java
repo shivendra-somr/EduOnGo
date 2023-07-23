@@ -22,8 +22,9 @@ public class StudentUI {
 		System.out.println("2. Submit Assignments");
 		System.out.println("3. Track Progress");
 		System.out.println("4. Update Details");
-		System.out.println("5. Change Password");
-		System.out.println("6. Delete Account");
+		System.out.println("5. Enroll in Course");
+		System.out.println("6. Change Password");
+		System.out.println("7. Delete Account");
 		System.out.println("0. Exit");
 		System.out.println("***********************************");
 	}
@@ -101,9 +102,12 @@ public class StudentUI {
 				updateDetails(sc);
 				break;
 			case 5:
-				changePassword(sc);
+				enrolledInCourse(sc);
 				break;
 			case 6:
+				changePassword(sc);
+				break;
+			case 7:
 				deleteAccount(sc);
 				System.out.println("Account deleted successfully!");
 				System.out.println("***********************************");
@@ -119,6 +123,40 @@ public class StudentUI {
 				break;
 			}
 		} while (choice != 0);
+	}
+
+	static void enrolledInCourse(Scanner sc) {
+		StudentService studentService = new StudentServiceImpl();
+
+	    // Get the list of available courses that the student is not enrolled in
+	    List<Course> availableCourses = studentService.getAvailableCourses(LoggedInUserId.loggedInUserId);
+	    
+	    if (availableCourses.isEmpty()) {
+	        System.out.println("You are already enrolled in all available courses.");
+	        return;
+	    }
+
+	    // Display available courses for enrollment
+	    System.out.println("\t\tAvailable Courses for Enrollment");
+	    System.out.println("***********************************");
+	    for (Course course : availableCourses) {
+	        System.out.println("Course ID: " + course.getCourseId());
+	        System.out.println("Title: " + course.getTitle());
+	        System.out.println("Description: " + course.getDescription());
+	        System.out.println("-----------------------------------");
+	    }
+
+	    // Prompt student to select a course to enroll in
+	    System.out.print("Enter the course ID to enroll: ");
+	    long courseId = sc.nextLong();
+
+	    // Enroll the student in the selected course
+	    try {
+	        studentService.enrollStudentInCourse(LoggedInUserId.loggedInUserId, courseId);
+	        System.out.println("Successfully enrolled in the course!");
+	    } catch (NoRecordFoundException e) {
+	        System.out.println(e.getMessage());
+	    }
 	}
 
 	static void deleteAccount(Scanner sc) {

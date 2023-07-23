@@ -21,7 +21,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
 			em = EMUtils.getEntityManager();
 
 			// check if assignment with same name exists or not
-			Query query = em.createQuery("Select Count(s) From Assignment a WHERE title = :title");
+			Query query = em.createQuery("Select Count(a) From Assignment a WHERE title = :title");
 			query.setParameter("title", assignment.getTitle());
 			if ((long) query.getSingleResult() > 0) {
 				// throwing error message for same assignment title
@@ -60,7 +60,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
 				// assignment with
 				// new name.
 				// check if assignment with same name exists
-				Query query = em.createQuery("SELECT count(a) FROM Assignment WHERE title = :title");
+				Query query = em.createQuery("SELECT count(a) FROM Assignment a WHERE title = :title");
 				query.setParameter("title", assignment.getTitle());
 				if ((Long) query.getSingleResult() > 0) {
 					// you are here means assignment with given name exists so throw exceptions
@@ -97,11 +97,9 @@ public class AssignmentDaoImpl implements AssignmentDao {
 				throw new NoRecordFoundException("No assignment found with given id : " + assignmentId);
 			}
 
-			em.getTransaction().begin();
 
-			em.remove(deletedAssignment);
+			deletedAssignment.setDeleted(true);
 
-			em.getTransaction().commit();
 
 		} catch (PersistenceException e) {
 			em.getTransaction().rollback();

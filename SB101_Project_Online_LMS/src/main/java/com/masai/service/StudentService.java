@@ -17,8 +17,10 @@ public interface StudentService {
     List<Student> getAll();
 	void register(Student student) throws SomethingWentWrongException;
 	void login(String username, String password) throws SomethingWentWrongException;
+	void enrollStudentInCourse(long studentId, long courseId) throws NoRecordFoundException;
 	List<Course> getEnrolledCourses(long id);
 	List<Assignment> getAssignmentsByCourseId(long courseId);
 	List<Grade> getGradesByCourseId(long studentId, long courseId);
 	void changePassword(long loggedInUserId, String currentPassword, String newPassword) throws NoRecordFoundException, SomethingWentWrongException;
+	List<Course> getAvailableCourses(long loggedInUserId);
 }

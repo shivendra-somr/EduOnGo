@@ -447,6 +447,7 @@ public class InstructorUI {
 			System.out.println("4. Delete Quiz");
 			System.out.println("0. Go Back to Main Menu");
 			System.out.println("***********************************");
+			System.out.print("Enter your choice :");
 			choice = sc.nextInt();
 			switch (choice) {
 			case 1:
@@ -494,10 +495,10 @@ public class InstructorUI {
 				System.out.print("Enter new Quiz Title: ");
 				String newTitle = sc.next();
 
-				System.out.print("Enter new Quiz Title: ");
+				System.out.print("Enter new Quiz Description: ");
 				String newDescription = sc.next();
 
-				System.out.print("Enter new Quiz Title: ");
+				System.out.print("Enter new Quiz Time Limit: ");
 				int newTimeLimit = sc.nextInt();
 
 				Quiz updatedQuiz = new Quiz(newTitle, newDescription, newTimeLimit);
@@ -605,10 +606,10 @@ public class InstructorUI {
 				long assignmentIdToUpdate = sc.nextLong();
 
 				System.out.print("Enter new Assignment Title: ");
-				String newTitle = sc.nextLine();
+				String newTitle = sc.next();
 
 				System.out.print("Enter Assignment Description: ");
-				String newDescription = sc.nextLine();
+				String newDescription = sc.next();
 
 				System.out.print("Enter Assignment Due Date: ");
 				LocalDate newDate = LocalDate.parse(sc.next());

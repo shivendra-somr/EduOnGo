@@ -63,14 +63,14 @@ public class StudentServiceImpl implements StudentService {
 					"SELECT s FROM Student s WHERE s.username = :username AND s.password = :password AND s.isDeleted = false");
 			query.setParameter("username", username);
 			query.setParameter("password", password);
-			
+
 			try {
 				Student student = (Student) query.getSingleResult();
 				LoggedInUserId.loggedInUserId = student.getStudentId();
 			} catch (NoResultException e) {
 				throw new SomethingWentWrongException("The username or password is incorrect");
 			}
-			
+
 		} catch (SomethingWentWrongException e) {
 			throw new SomethingWentWrongException("Failed to login student, please try again");
 		}
@@ -104,26 +104,23 @@ public class StudentServiceImpl implements StudentService {
 		try {
 			student = studentDao.getById(id);
 			if (student == null) {
-	            System.out.println("Student not found with ID: " + id);
-	            return new ArrayList<>(); // Return an empty list if student not found
-	        }
+				System.out.println("Student not found with ID: " + id);
+				return new ArrayList<>(); // Return an empty list if student not found
+			}
 
-	        
 		} catch (NoRecordFoundException | SomethingWentWrongException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		// Return the list of enrolled courses for the student
-        return student.getEnrollments().stream()
-                .map(Enrollment::getCourse)
-                .collect(Collectors.toList());
-        
+		return student.getEnrollments().stream().map(Enrollment::getCourse).collect(Collectors.toList());
+
 	}
 
 	@Override
 	public List<Assignment> getAssignmentsByCourseId(long courseId) {
-		CourseDao courseDao = new CourseDaoImpl();			
-		
+		CourseDao courseDao = new CourseDaoImpl();
+
 		Course course = new Course();
 		try {
 			course = courseDao.getCourseById(courseId);
@@ -132,13 +129,13 @@ public class StudentServiceImpl implements StudentService {
 			e.printStackTrace();
 		}
 
-        if (course == null) {
-            System.out.println("Course not found with ID: " + courseId);
-            return new ArrayList<>(); // Return an empty list if course not found
-        }
+		if (course == null) {
+			System.out.println("Course not found with ID: " + courseId);
+			return new ArrayList<>(); // Return an empty list if course not found
+		}
 
-        // Return the list of assignments for the course
-        return course.getAssignments();
+		// Return the list of assignments for the course
+		return course.getAssignments();
 	}
 
 	@Override
@@ -157,26 +154,78 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public void changePassword(long loggedInUserId, String currentPassword, String newPassword) throws NoRecordFoundException, SomethingWentWrongException {
+	public void changePassword(long loggedInUserId, String currentPassword, String newPassword)
+			throws NoRecordFoundException, SomethingWentWrongException {
 		// Retrieve the Student entity from the database
 		StudentDao studentDao = new StudentDaoImpl();
-	    Student student = studentDao.getById(loggedInUserId);
+		Student student = studentDao.getById(loggedInUserId);
 
-	    // Check if the student exists
-	    if (student == null) {
-	        throw new SomethingWentWrongException("Student with ID " + loggedInUserId + " not found.");
-	    }
+		// Check if the student exists
+		if (student == null) {
+			throw new SomethingWentWrongException("Student with ID " + loggedInUserId + " not found.");
+		}
 
-	    // Check if the provided currentPassword matches the existing password of the student
-	    if (!student.getPassword().equals(currentPassword)) {
-	        throw new SomethingWentWrongException("Current password is incorrect.");
-	    }
+		// Check if the provided currentPassword matches the existing password of the
+		// student
+		if (!student.getPassword().equals(currentPassword)) {
+			throw new SomethingWentWrongException("Current password is incorrect.");
+		}
 
-	    // Update the password with the new password
-	    student.setPassword(newPassword);
+		// Update the password with the new password
+		student.setPassword(newPassword);
 
-	    // Save the updated Student entity back to the database
-	    studentDao.update(loggedInUserId,student);
+		// Save the updated Student entity back to the database
+		studentDao.update(loggedInUserId, student);
+	}
+
+	@Override
+	public void enrollStudentInCourse(long studentId, long courseId) throws NoRecordFoundException {
+		EntityManager em = null;
+		try {
+			em = EMUtils.getEntityManager();
+			// Check if student with given id exists
+			Student student = em.find(Student.class, studentId);
+			if (student == null) {
+				throw new NoRecordFoundException("No student found with given id: " + studentId);
+			}
+
+			// Check if course with given id exists
+			Course course = em.find(Course.class, courseId);
+			if (course == null) {
+				throw new NoRecordFoundException("No course found with given id: " + courseId);
+			}
+
+			// Create enrollment for the student and course
+			Enrollment enrollment = new Enrollment();
+			enrollment.setStudent(student);
+			enrollment.setCourse(course);
+
+			// Save the enrollment
+			em.getTransaction().begin();
+			em.persist(enrollment);
+			em.getTransaction().commit();
+		} catch (NoRecordFoundException e) {
+			throw new NoRecordFoundException("No record found!");
+		} finally {
+			em.close();
+		}
+	}
+
+	@Override
+	public List<Course> getAvailableCourses(long loggedInUserId) {
+		EntityManager em = EMUtils.getEntityManager();
+
+		try {
+			// Query to get all courses that the student is not enrolled in
+			String jpql = "SELECT c FROM Course c WHERE c.courseId NOT IN "
+					+ "(SELECT e.course.courseId FROM Enrollment e WHERE e.student.studentId = :studentId)";
+			Query query = em.createQuery(jpql);
+			query.setParameter("studentId", loggedInUserId);
+
+			return query.getResultList();
+		} finally {
+			em.close();
+		}
 	}
 
 }
