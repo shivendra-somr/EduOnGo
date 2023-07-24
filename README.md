@@ -11,7 +11,6 @@ The EduOnGo (OLMS) is a comprehensive software solution designed to support remo
 - [Role of Instructor/Educator](#role-of-instructoreducator)
 - [Role of Student/Learner](#role-of-studentlearner)
 - [Database Design](#database-design)
-- [Additional Features (Optional)](#additional-features-optional)
 
 ## Domain Description
 
