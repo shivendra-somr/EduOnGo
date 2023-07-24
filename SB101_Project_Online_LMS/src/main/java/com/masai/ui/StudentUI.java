@@ -75,7 +75,7 @@ public class StudentUI {
 		try {
 			// Attempt to register the student
 			studentService.register(student);
-			System.out.println("Registration successful! You can now log in with your credentials.");
+			
 			System.out.println("***********************************");
 		} catch (SomethingWentWrongException e) {
 			System.out.println(e.getMessage());
