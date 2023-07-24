@@ -49,7 +49,7 @@ public class StudentDaoImpl implements StudentDao {
 			em.getTransaction().begin();
 
 			em.persist(student);
-
+			System.out.println("Registration successful! You can now log in with your credentials.");
 			em.getTransaction().commit();
 		} catch (PersistenceException e) {
 			em.getTransaction().rollback();
