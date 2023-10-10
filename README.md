@@ -4,7 +4,8 @@
 
 The EduOnGo (OLMS) is a comprehensive software solution designed to support remote education and training. The system aims to provide educators with tools for creating and delivering online courses, while also offering students a user-friendly interface for accessing course materials, participating in assignments, and tracking their progress. With features such as progress tracking, performance analytics, and communication tools, the online learning management system enhances the teaching and learning experience.
 
-![ER-Diagram](https://github.com/shivendra-somr/gamy-lace-3375/assets/123854927/097b297c-f8f5-4348-8b00-32536b35dbc5)
+![ER-Diagram](./ER-Diagram.png)
+
 
 ## Table of Contents
 - [Domain Description](#domain-description)
