@@ -2,28 +2,72 @@ package com.masai.service;
 
 import java.util.List;
 
-import com.masai.entity.Assessment;
-import com.masai.entity.Assignment;
-import com.masai.entity.Course;
 import com.masai.entity.Instructor;
-import com.masai.entity.Lesson;
-import com.masai.entity.Quiz;
 import com.masai.exception.NoRecordFoundException;
 import com.masai.exception.SomethingWentWrongException;
 
 public interface InstructorService {
-	void registration(Instructor instructor) throws SomethingWentWrongException;
 
-	void login(String username, String password) throws SomethingWentWrongException;
+    /**
+     * Registers a new instructor in the system.
+     * 
+     * @param instructor The Instructor object representing the instructor to be registered.
+     * @throws SomethingWentWrongException if an unexpected error occurs during the registration process.
+     */
+    void registration(Instructor instructor) throws SomethingWentWrongException;
 
-	Instructor getInstructorById(long instructorId) throws NoRecordFoundException;
+    /**
+     * Allows an instructor to log in to the system using their username and password.
+     * 
+     * @param username The username of the instructor.
+     * @param password The password of the instructor.
+     * @throws SomethingWentWrongException if an unexpected error occurs during the login process.
+     */
+    void login(String username, String password) throws SomethingWentWrongException;
 
-	void updateInstructorDetails(long instructorId,Instructor instructor) throws NoRecordFoundException, SomethingWentWrongException;
+    /**
+     * Retrieves an instructor's information by their unique identifier (instructorId).
+     * 
+     * @param instructorId The unique identifier of the instructor.
+     * @return An Instructor object containing the instructor's information.
+     * @throws NoRecordFoundException if no instructor record is found with the provided instructorId.
+     */
+    Instructor getInstructorById(long instructorId) throws NoRecordFoundException;
 
-	void deleteInstructorById(long instructorId) throws NoRecordFoundException;
+    /**
+     * Updates an instructor's details with the provided instructor data.
+     * 
+     * @param instructorId The unique identifier of the instructor to be updated.
+     * @param instructor The Instructor object containing the updated instructor data.
+     * @throws NoRecordFoundException if no instructor record is found with the provided instructorId.
+     * @throws SomethingWentWrongException if an unexpected error occurs during the update process.
+     */
+    void updateInstructorDetails(long instructorId, Instructor instructor) throws NoRecordFoundException, SomethingWentWrongException;
 
-	List<Instructor> getAllInstructor() throws NoRecordFoundException;
+    /**
+     * Deletes an instructor record from the system.
+     * 
+     * @param instructorId The unique identifier of the instructor to be deleted.
+     * @throws NoRecordFoundException if no instructor record is found with the provided instructorId.
+     */
+    void deleteInstructorById(long instructorId) throws NoRecordFoundException;
 
-	void changePassword(long loggedInUserId, String currentPassword, String newPassword) throws NoRecordFoundException, SomethingWentWrongException;
+    /**
+     * Retrieves a list of all instructors available in the system.
+     * 
+     * @return List of Instructor objects representing all available instructors.
+     * @throws NoRecordFoundException if no instructor records are found.
+     */
+    List<Instructor> getAllInstructor() throws NoRecordFoundException;
 
+    /**
+     * Allows an instructor to change their password.
+     * 
+     * @param loggedInUserId The unique identifier of the logged-in instructor.
+     * @param currentPassword The instructor's current password.
+     * @param newPassword The new password to be set.
+     * @throws NoRecordFoundException if no instructor record is found with the provided loggedInUserId.
+     * @throws SomethingWentWrongException if an unexpected error occurs during the password change process.
+     */
+    void changePassword(long loggedInUserId, String currentPassword, String newPassword) throws NoRecordFoundException, SomethingWentWrongException;
 }
